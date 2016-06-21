@@ -29,7 +29,7 @@
 
 ```cpp
 
-	code:
+	cpp code:
 	
 	
 		class Queue
@@ -133,7 +133,7 @@
 	
 	方法二：使用数组实现循环队列。
 	
-	
+<br>	
 	当且仅当 Front = Rear 时，队列为空。初始条件 Front = Rear = 0；
 	
 	
@@ -148,7 +148,21 @@
 	
 
 
+```cpp
 
+	cpp code:
+	
+			
+			
+		
+		
+```
+
+
+
+
+
+			
 
 
 

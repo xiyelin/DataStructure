@@ -133,7 +133,19 @@
 	
 	方法二：使用数组实现循环队列。
 	
-![image](http://hbimg.b0.upaiyun.com/503fbfda75689798464317eae6df24d78be56dde59bd-numenq_fw658)	
+	
+	当且仅当 Front = Rear 时，队列为空。初始条件 Front = Rear = 0；
+	
+	
+![image](http://hbimg.b0.upaiyun.com/a5eb007aa7e0adf886c512ef71aa27c7f6ce55cb3e96-Oje8bX_fw658)	
+
+
+
+	但是这会引发一个问题，如果队列满了的话，条件将会和判空的条件冲突，为了解决这个问题，队列不能插满。
+	
+	
+![image](http://hbimg.b0.upaiyun.com/66a337d33c8817728662533877d417c41c2b9388150d-URf4ah_fw658)		
+	
 
 
 

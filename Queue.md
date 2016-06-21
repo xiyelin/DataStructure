@@ -255,10 +255,104 @@
 
 	cpp code:
 		
+		//队列的链表实现方法
+		struct QueueNode
+		{
+			int _data;					//数据域
+			QueueNode* _next;           //指向下个节点的指针域
 		
+			QueueNode(int x = 0)
+			{
+				_data = x;
+				_next = NULL;
+			}
+		};
 		
+		class ListQueue
+		{
+		public:
+			ListQueue()
+				:_head(NULL)
+				,_tail(NULL)
+				,_size(0)
+			{}
+			
+		public:
+			void Display()                           //打印队列
+			{ 
+				if (NULL == _head)
+					cout << "Display: ListQueue is empty !" << endl;
+				else
+				{
+					QueueNode* cur = _head;
 		
+					while (cur)
+					{
+						cout << cur->_data << "->";
+						cur = cur->_next;
+					}
+					cout << "NULL" << endl;
+				}
+			}
 		
+			bool Empty()                              //判空
+			{
+				return (NULL == _head);
+			}
+		
+			int Size()                                //返回队列元素个数
+			{
+				return _size;
+			}
+			 
+			int Front()                               //返回队头元素
+			{
+				if (NULL != _head)
+					return _head->_data;
+			}
+		
+			int Back()                                //返回队尾元素
+			{ 
+				if (NULL != _head)
+					return _tail->_data;
+			}
+		
+			void Pop()                                //队头删除元素
+			{
+				if (NULL != _head)
+				{
+					QueueNode* next = _head->_next;
+		
+					delete _head;
+					_head = next;
+		
+					--_size;
+				}
+			}
+		
+			void Push(int x)                           //队尾插入新的队列元素
+			{
+				if (NULL == _head)
+				{
+					_head = new QueueNode(x);
+					_tail = _head;
+				}
+				else
+				{
+					QueueNode* tmp = new QueueNode(x);
+		
+					_tail->_next = tmp;
+					_tail = _tail->_next;
+				}
+		
+				++_size;
+			}
+		
+		private:
+			QueueNode* _head;                 //指向队头节点的指针
+			QueueNode* _tail;                 //指向队尾节点的指针
+			int _size;                        //队列元素个数
+		};
 		
 		
 		

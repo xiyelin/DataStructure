@@ -150,13 +150,21 @@
 
 	cpp code:
 	
+		# define ROW 4                					//行
+		# define COL 3              				    //列
 		
+		void MatrixTranspose(int src[ROW][COL])
+		{
+			int dst[COL][ROW] = { 0 };
 		
-		
-		
-		
-		
-		
+			for (int i = 0; i < ROW; ++i)
+			{
+				for (int j = 0; j <= COL; ++j)
+				{
+					dst[i][j] = src[j][i];
+				}
+			}
+		}
 		
 		
 ```

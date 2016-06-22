@@ -1,9 +1,12 @@
 ## 目录
 * [单链表的节点](#单链表的节点)
+
 * [单链表的数据结构](#单链表的数据结构)
+
 * [单链表代码](#代码)
+
 * [链表相关的面试题](#链表相关的面试题)
-	
+	- [x] [1.从尾到头打印单链表](#从尾到头打印单链表)
 
 <br>
 <br>
@@ -252,6 +255,33 @@
 <br>
 
 ### 链表相关的面试题
+
+
+#### 从尾到头打印单链表
+
+```cpp
+
+	void FromTailToHeadPrint(const List<T>& l)
+	{
+		stack<T> s;                      
+		ListNode<T>* cur = l._head;
+
+		while (cur)
+		{
+			s.push(cur->_data);                     //先将链表的所有数据入栈
+			cur = cur->_next;
+		}
+
+		while (!s.empty())
+		{
+			cout << s.top() << "->";                //边打印边出栈即为逆序
+			s.pop();
+		}
+		cout << "NULL" << endl;
+	}
+	
+```
+
 
 
 

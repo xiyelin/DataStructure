@@ -2,13 +2,13 @@
 
 * [对称矩阵](#对称矩阵)
 	* [对称矩阵的压缩存储](#对称矩阵的压缩存储)
-	* [代码](#代码)
+	* [代码](#代码1)
 * [稀疏矩阵](#稀疏矩阵)
 	* [稀疏矩阵的压缩存储](#稀疏矩阵的压缩存储)
 * [矩阵的转置](#矩阵的转置)
-	* [代码](#代码)
+	* [代码](#代码2)
 * [矩阵的快速转置](#矩阵的快速转置)
-	* [代码](#代码)
+	* [代码](#代码3)
 
 
 
@@ -30,21 +30,73 @@
 ![image](http://hbimg.b0.upaiyun.com/7d5692349850431cb3c795d0476d2e0d0ed68ce995a4-4dRXKS_fw658)
 
 
-#### 代码	
+#### 代码1	
 
 ```cpp
 
 	cpp code:
 		
+		# include <iostream>
+		using namespace std;
+		# include <assert.h>
 		
+		class Matrix
+		{
+		public:
+			Matrix(const int n)
+			{
+				_a = new int[n * (n + 1) / 2];
+			}
+			~Matrix()
+			{
+				delete[] _a;
+				_a = NULL;
+			}
 		
+		public:
+			void CompressionStorage(int* matrix, int n)     //压缩存储
+			{
+				assert(matrix);
 		
+				int index = 0;
 		
+				for (int i = 0; i < n; ++i)
+				{
+					for (int j = 0; j <= i; ++j)
+					{
+						_a[index++] = matrix[i*n + j];
+					}
+				}
+			}
 		
+			void Reduction(const int n)                                 //还原矩阵
+			{
+				int* matrix = new int[n * n];
+				int index = 0;
 		
+				for (int i = 0; i < n; ++i)
+				{
+					for (int j = 0; j <= i; ++j)
+					{
+						matrix[i * n + j] = _a[index++];
+					}
+				}
 		
+				for (int i = 0; i < n; ++i)
+				{
+					for (int j = 0; j < n; ++j)
+					{
+						matrix[i*n + j] = matrix[j*n + i];
+					}
+				}
 		
+				delete[] matrix;
+				matrix = NULL;
+			}
 		
+		private:
+			int* _a;
+		};	
 		
 		
 ```
@@ -92,7 +144,7 @@
 ![image](http://hbimg.b0.upaiyun.com/123e1f3e26bbb3950f5dfc9d0de519d434a9b150b18c-2Ul9Oi_fw658)
 
 
-#### 代码
+#### 代码2
 
 ```cpp
 

@@ -123,8 +123,9 @@
 	2.Java集合中的TreeSet和TreeMap，C++ STL中的set、map，以及Linux虚拟内存的管理，都是通过红黑树去实现的。
 	
 
+<br>
 
-	扩展：计算机中的树
+	扩展：
 	
 ![image](http://hbimg.b0.upaiyun.com/402c6a6b5aef28922ae1ffdacfd44d71211cea2f3bc0-kqbHUm_fw658)
 

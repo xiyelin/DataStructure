@@ -102,12 +102,281 @@
 
 	cpp code:
 		
+		# include <iostream>
+		using namespace std;
+		# include <queue>
+		# include <stack>
 		
+		template<class T>
+		struct BinaryTreeNode
+		{
+			T _data;                           //数据域
+			BinaryTreeNode<T>* _left;          //指向左孩子的指针
+			BinaryTreeNode<T>* _right;         //指向右孩子的指针
 		
+			BinaryTreeNode(const T& x)
+				:_data(x)
+				,_left(NULL)
+				,_right(NULL)
+			{}
+		};
 		
+		template<class T>
+		class BinaryTree
+		{
+			typedef BinaryTreeNode<T> Node;
+		public:
+			BinaryTree(int* a, int size, char invalid)
+			{
+				int index = 0;
+				_CreateBinaryTree(_root, a, size, index, invalid);
+			}
+			~BinaryTree()
+			{
+				_Destroy(_root);            
+			}
 		
+		public:
+			//递归遍历
+			void Preorder()
+			{
+				cout << "递归前序遍历：";
+				_Preorder(_root);
+				cout << endl;
+			}
+			void Inorder()
+			{
+				cout << "递归中序遍历：";
+				_Inorder(_root);
+				cout << endl;
+			}
+			void Posorder()
+			{
+				cout << "递归后序遍历：";
+				_Posorder(_root);
+				cout << endl;
+			}
 		
+			//非递归遍历
+			void Preorder_NonR()
+			{
+				cout << "非递归前序遍历：";
+				_Preorder_NonR(_root);
+				cout << endl;
+			}
+			void Inorder_NonR()
+			{
+				cout << "非递归中序遍历：";
+				_Inorder_NonR(_root);
+				cout << endl;
+			}
+			void Posorder_NonR()
+			{
+				cout << "非递归后序遍历：";
+				_Posorder_NonR(_root);
+				cout << endl;
+			}
 		
+			//层序遍历
+			void Levelorder()
+			{
+				cout << "层序遍历：";
+				_Levelorder(_root);
+				cout << endl;
+			}
+		
+			void DepthOfBTree()
+			{
+				cout << "二叉树的深度：";
+				cout << _DepthOfBTree(_root) << endl;
+			}
+		
+			void LeafCountOfBTree()
+			{
+				cout << "叶子节点的个数：";
+				cout << _LeafCountOfBTree(_root) << endl;
+			}
+		
+		protected:
+			//创建二叉树函数
+			void _CreateBinaryTree(Node*& root, int* a, int size, int& index, char invalid)
+			{
+				while (index < size)
+				{
+					if (a[index] == '#')
+						return;
+					else
+						root = new Node(a[index]);
+		
+					_CreateBinaryTree(root->_left, a, size, ++index, invalid);
+					_CreateBinaryTree(root->_right, a, size, ++index, invalid);
+				}
+			}
+			//析构二叉树
+			void _Destroy(Node*& root)
+			{
+				if (NULL == root)
+					return;
+		
+				_Destroy(root->_left);
+				_Destroy(root->_right);
+				delete root;
+				root = NULL;
+			}
+			//递归遍历
+			void _Inorder(Node* root)
+			{
+				if (NULL == root)
+					return;
+		
+				_Inorder(root->_left);
+				cout << root->_data << " ";
+				_Inorder(root->_right);
+			}
+		
+			void _Preorder(Node* root)
+			{
+				if (NULL == root)
+					return;
+		
+				cout << root->_data << " ";
+				_Preorder(root->_left);
+				_Preorder(root->_right);
+			}
+		
+			void _Posorder(Node* root)
+			{
+				if (NULL == root)
+					return;
+		
+				_Posorder(root->_left);
+				_Posorder(root->_right);
+				cout << root->_data << " ";
+			}
+			
+			//非递归遍历
+			void _Preorder_NonR(Node* root)
+			{
+				stack<Node*> s;                     //利用栈模拟递归函数压栈的过程
+		
+				if (NULL != root)
+					s.push(root);
+		
+				while (!s.empty())
+				{
+					Node* cur = s.top();
+		
+					s.pop();
+		
+					if (cur->_right)
+						s.push(cur->_right);
+					if (cur->_left)
+						s.push(cur->_left);
+		
+					cout << cur->_data << " ";
+				}
+			}
+			void _Inorder_NonR(Node* root)
+			{
+				stack<Node*> s;
+				Node* cur = root;
+		
+				while (NULL != cur || !s.empty())          //关键点
+				{
+					while (NULL != cur)
+					{
+						s.push(cur);
+						cur = cur->_left;
+					}
+		
+					Node* node = s.top();
+					s.pop();
+		
+					cout << node->_data << " ";
+					cur = node->_right;
+				}
+			}
+			void _Posorder_NonR(Node* root)
+			{
+				stack<Node*> s1;
+				stack<Node*> s2;
+				
+				s1.push(root);
+		
+				while (!s1.empty())
+				{
+					Node* cur = s1.top();
+					
+					s1.pop();
+					s2.push(cur);
+					
+					if (cur->_left)
+						s1.push(cur->_left);
+					if (cur->_right)
+						s1.push(cur->_right);
+				}
+		
+				while (!s2.empty())
+				{
+					Node* tmp = s2.top();
+					cout << tmp->_data << " ";
+					s2.pop();
+				}
+			}
+		
+			//层序遍历
+			void _Levelorder(Node* root)
+			{
+				queue<Node*> q;
+		
+				if (NULL != root)
+					q.push(root);
+		
+				while (NULL != root)
+				{
+					root = q.front();
+					cout << root->_data << " ";
+		
+					if (root->_left)
+						q.push(root->_left);
+					if (root->_right)
+						q.push(root->_right);
+		
+					q.pop();
+					if (q.empty())
+						root = NULL;
+				}
+			}
+		
+			//求二叉树的深度
+			int _DepthOfBTree(Node* root)
+			{
+				int ldepth;
+				int rdepth;
+		
+				if (root == NULL)
+					return 0;
+		
+				ldepth = _DepthOfBTree(root->_left);
+				rdepth = _DepthOfBTree(root->_right);
+		
+				return (ldepth > rdepth) ? (ldepth + 1) : (rdepth + 1);
+			}
+		
+			//求二叉树叶子节点的个数
+			int _LeafCountOfBTree(Node* root)
+			{
+				if (root == NULL)
+					return 0;
+				if (root->_left == NULL && root->_right == NULL)
+					return 1;
+		
+				return _LeafCountOfBTree(root->_left) + _LeafCountOfBTree(root->_right);
+			}
+		
+		private:
+			Node* _root;             //根节点
+		};	
 		
 		
 		

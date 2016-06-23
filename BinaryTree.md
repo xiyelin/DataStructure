@@ -124,6 +124,9 @@
 	
 
 
+	扩展：计算机中的树
+	
+![image](http://hbimg.b0.upaiyun.com/402c6a6b5aef28922ae1ffdacfd44d71211cea2f3bc0-kqbHUm_fw658)
 
 
 

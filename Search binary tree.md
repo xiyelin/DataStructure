@@ -126,15 +126,99 @@
 				return NULL;
 			}
 		
-			Node* Remove(const K& key)
+			void Remove(const K& key)
 			{
-				//删除的节点如果没有右子树用左子树填补
+				Node* cur = _root;
+				Node* prev = cur;
 		
-		
-		
+				while (cur)
+				{
+					if (cur->_key > key)
+					{
+						prev = cur;
+						cur = cur->_left;
+					}
+					else if (cur->_key < key)
+					{
+						prev = cur;
+						cur = cur->_right;
+					}
+					else
+						break;
+				}
 		
 				//删除的节点如果没有左子树用右子树填补
+				if (cur && NULL == cur->_left && cur->_right)
+				{
+					if (cur->_key < prev->_key)
+						prev->_left = cur->_right;
+					else
+						prev->_right = cur->_right;
+					
+					delete cur;
+				}
+				//删除的节点如果没有右子树用左子树填补
+				else if (cur && NULL == cur->_right && cur->_left)
+				{
+					if (cur->_key < prev->_key)
+						prev->_left = cur->_left;
+					else
+						prev->_right = cur->_left;
+		
+					delete cur;
+				}
 				//删除的节点如果有左右子树用右子树中最小值填补
+				else if (cur && cur->_left && cur->_right)
+				{
+					//cur右子树中最小的节点就是cur的右
+					Node* MinSubR = cur->_right;
+		
+					cur->_key = MinSubR->_key;
+					cur->_value = MinSubR->_value;
+		
+					if (NULL == MinSubR->_left)
+					{
+						if (MinSubR->_right)
+							cur->_right = MinSubR->_right;
+						else
+							cur->_right = NULL;
+			
+						delete MinSubR;
+						MinSubR = NULL;
+					}
+					else
+					{
+						Node* prev_MinSubR = MinSubR;
+		
+						//右子树最小值为 MinSubR
+						while (MinSubR && MinSubR->_left)
+						{
+							prev_MinSubR = MinSubR;
+							MinSubR = MinSubR->_left;
+						}
+		
+						if (MinSubR->_right)
+							prev_MinSubR->_left = MinSubR->_right;
+						else
+							prev_MinSubR->_left = NULL;
+		
+						delete MinSubR;
+						MinSubR = NULL;
+					}
+				}
+				//删除叶子节点
+				else if (cur)
+				{
+					if (cur->_key > prev->_key)
+						prev->_right = NULL;
+					else
+						prev->_left = NULL;
+		
+					delete cur;
+				}
+				//没有找到要删除的节点
+				else
+					cout << "没有找到此节点！" << endl;
 			}
 		
 		protected:

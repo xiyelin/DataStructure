@@ -38,7 +38,7 @@
 
 ```cpp
 
-	cpp node
+	cpp node:
 	
 		# include <iostream>
 		using namespace std;

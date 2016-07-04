@@ -27,7 +27,6 @@
 	4.左右子树都是二叉搜索树。
 	
 	
-<br>
 
 ![image](http://hbimg.b0.upaiyun.com/aa651b8ff11e4b033d14ab4fc5484b9a02fa4810c42c-IsrrW2_fw658)
 

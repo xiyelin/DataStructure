@@ -41,13 +41,124 @@
 
 	cpp node
 	
-	
+		# include <iostream>
+		using namespace std;
+		
+		template<class K, class V>
+		struct SBTreeNode
+		{
+			K _key;
+			V _value;
+		
+			SBTreeNode<K, V>* _left;
+			SBTreeNode<K, V>* _right;
+		
+			SBTreeNode(const K& key = K(), const V& value = V())
+				:_key(key)
+				,_value(value)
+				,_left(NULL)
+				,_right(NULL)
+			{}
+		};
+		
+		template<class K, class V>
+		class SBTree
+		{
+			typedef SBTreeNode<K, V> Node;
+		public:
+			SBTree()
+				:_root(NULL)
+			{}
+			~SBTree()
+			{
+				//析构函数
+			}
+		
+		public:
+			void InorderSBTree()
+			{
+				_Inorder(_root);
+				cout << endl;
+			}
+			bool Insert(const K& key, const V& value)
+			{
+				if (NULL == _root)
+				{
+					_root = new Node(key, value);
+					return true;
+				}
+		
+				Node* cur = _root;
+				Node* prev = NULL;
+				Node* tmp = new Node(key, value);
+		
+				while (cur)
+				{	
+					prev = cur;
+					if (key > cur->_key)
+						cur = cur->_right;
+					else if (key < cur->_key)
+						cur = cur->_left;
+					else
+						return false;
+				}
+				if (prev->_key > key)
+					prev->_left = tmp;
+				else
+					prev->_right = tmp;
+		
+				return true;
+			}
+		
+			Node* Find(const K& key)
+			{
+				Node* cur = _root;
+		
+				while (cur)
+				{
+					if (key > cur->_key)
+						cur = cur->_right;
+					else if (key < cur->_key)
+						cur = cur->_left;
+					else
+						return cur;
+				}
+		
+				return NULL;
+			}
+		
+			Node* Remove(const K& key)
+			{
+				//删除的节点如果没有右子树用左子树填补
+		
+		
+		
+		
+				//删除的节点如果没有左子树用右子树填补
+				//删除的节点如果有左右子树用右子树中最小值填补
+			}
+		
+		protected:
+			void _Inorder(Node* root)
+			{
+				if (NULL == root)
+					return;
+		
+				_Inorder(root->_left);
+				cout << "(" << root->_key << "," << root->_value << ")" << " ";
+				_Inorder(root->_right);
+			}
+		
+		private:
+			Node* _root;
+		};
 	
 	
 	
 	
 ```
 
+<br>
 
 #### 删除操作详解
 
@@ -57,7 +168,8 @@
 
 
 
-
+<br>
+<br>
 
 #### 优缺点分析
 

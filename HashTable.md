@@ -362,14 +362,14 @@
 		
 1.信息安全： 
 	
-	[文件校验](http://baike.baidu.com/view/5094912.htm)
-	[数字签名](http://baike.baidu.com/view/7626.htm)
-	认证模式：MD5、SHA1的破解
+[文件校验](http://baike.baidu.com/view/5094912.htm)
+[数字签名](http://baike.baidu.com/view/7626.htm)
+认证模式：MD5、SHA1的破解
 
 2.布隆过滤器： 
 	
-	![博客1](https://segmentfault.com/a/1190000002729689)
-	![博客2](http://www.cnblogs.com/haippy/archive/2012/07/13/2590351.html)
+[博客1](https://segmentfault.com/a/1190000002729689)
+[博客2](http://www.cnblogs.com/haippy/archive/2012/07/13/2590351.html)
 	
 	
 	

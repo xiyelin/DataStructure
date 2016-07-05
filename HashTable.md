@@ -83,11 +83,260 @@
 
 ```cpp
 
+		# include <iostream>
+		using namespace std;
+		# include <vector>
+		# include <string>
+		
+		template<class K>
+		struct DefaultHashFunc
+		{
+			size_t operator() (const K& key)
+			{
+				return key;
+			}
+		};
+		
+		template<>
+		struct DefaultHashFunc<string>
+		{
+			static size_t _BKDRHash(const char* str)
+			{
+				unsigned int seed = 131; // 31 131 1313 13131 131313
+				unsigned int hash = 0;
+				while (*str)
+				{
+					hash = hash * seed + (unsigned char)(*str++);
+				}
+				return (hash & 0x7FFFFFFF);
+			}
+		
+			size_t operator() (const string& key)
+			{
+				return _BKDRHash(key.c_str());
+			}
+		};
+		
+		template<class K, class V>
+		struct HashTableNode
+		{
+			K _key;
+			V _value;
+		
+			HashTableNode<K, V>* _next;
+		
+			HashTableNode(const K& key, const V& value)
+				:_key(key)
+				,_value(value)
+				,_next(NULL)
+			{}
+		};
 		
 		
+		template<class K, class V, class HashFunc = DefaultHashFunc<K>>
+		class HashTable
+		{
+			typedef HashTableNode<K, V> Node;
+		public:
+			HashTable()
+				:_size(0)
+			{
+				_tables.resize(10);
+			}
+			~HashTable()
+			{
+				for (size_t i = 0; i < _tables.size(); ++i)
+				{
+					Node* cur = _tables[i];
+		
+					while (cur)
+					{
+						Node* del = cur;
+						
+						cur = cur->_next;
+						delete del;
+					}
+					_tables[i] = NULL;
+				}
+			}
+		
+		public:
+			void PrintHashTables()
+			{
+				Node* cur = NULL;
+		
+				for (size_t i = 0; i < _tables.size(); ++i)
+				{
+					printf("HashTable[%d]：", i);
+					cur = _tables[i];
+					while (cur)
+					{
+						cout << "(" << cur->_key << "," << cur->_value << ")" << "->";
+						cur = cur->_next;
+					}
+					cout << "NULL" << endl;
+				}
+			}
+			bool Insert(const K& key, const V& value)
+			{
+				_CkeckCapacity();
+		
+				size_t index = _HashFunc(key);
+				Node* cur = _tables[index];
+				Node* tmp = new Node(key, value);
+		
+				while (cur)
+				{
+					if (key == cur->_key)
+						return false;
+		
+					cur = cur->_next;
+				}
+		
+				tmp->_next = _tables[index];
+				_tables[index] = tmp;
+		
+				++_size;
+		
+				return true;
+			}
+		
+			bool Remove(const K& key)
+			{
+				size_t index = _HashFunc(key);
+		
+				Node* cur = _tables[index];
+				Node* prev = cur;
+				while (cur)
+				{
+					if (key == cur->_key)
+						break;
+		
+					prev = cur;
+					cur = cur->_next;
+				}
+		
+				if (cur && cur == _tables[index])
+				{
+					_tables[index] = cur->_next;
+					delete cur;
+					cur = NULL;
+				}
+				else if (cur && cur != _tables[index])
+				{
+					prev->_next = cur->_next;
+		
+					delete cur;
+					cur = NULL;
+				}
+				else
+					return false;
+		
+				return true;
+			}
+			
+			Node* Find(const K& key)
+			{
+				size_t index = _HashFunc(key);
+		
+				Node* cur = _tables[index];
+				while (cur)
+				{
+					if (key == cur->_key)
+						return cur;
+		
+					cur = cur->_next;
+				}
+		
+				return NULL;
+			}
+		
+			V& operator[](const K& key)
+			{
+				size_t index = _HashFunc(key);
+		
+				Node* cur = _tables[index];
+				while (cur)
+				{
+					if (key == cur->_key)
+						return cur->_value;
+		
+					cur = cur->_next;
+				}
+			}
 		
 		
+		protected:
+			static size_t BKDRHash(const char * str)
+			{
+				unsigned int seed = 131; // 31 131 1313 13131 131313
+				unsigned int hash = 0;
+				while (*str)
+				{
+					hash = hash * seed + (*str++);
+				}r
+					eturn(hash & 0x7FFFFFFF);
+			}
+			size_t _HashFunc(const K& key)
+			{
+				return HashFunc()(key) % _tables.size();
+			}
 		
+			void _CkeckCapacity()
+			{
+				if (_size == _tables.size())
+				{
+					size_t newsize = _GetNewSize(_size);
+		
+					if (newsize == _tables.size())
+						return;
+		
+					vector<Node*> newtables;
+					newtables.resize(newsize);
+		
+					for (size_t i = 0; i < _tables.size(); ++i)
+					{	
+						Node* cur = _tables[i];
+						while (cur)
+						{
+							Node* tmp = cur;
+							cur = cur->_next;
+		
+							size_t index = _HashFunc(tmp->_key);
+							tmp->_next = newtables[index];
+							newtables[index] = tmp;
+						}
+						_tables[i] = NULL;
+					}
+		
+					swap(_tables, newtables);
+				}
+			}
+			size_t _GetNewSize(size_t size)
+			{
+				const int _PrimeSize = 28;
+				static const unsigned long _PrimeList[_PrimeSize] =
+				{
+					53ul, 97ul, 193ul, 389ul, 769ul,1543ul, 3079ul, 6151ul, 12289ul, 24593ul,
+					49157ul, 98317ul, 196613ul, 393241ul,786433ul,1572869ul, 3145739ul, 
+					6291469ul, 12582917ul,25165843ul,50331653ul, 100663319ul, 201326611ul,
+					402653189ul,805306457ul,1610612741ul, 3221225473ul, 4294967291ul
+				};
+		
+				for (size_t i = 0; i < _PrimeSize; ++i)
+				{
+					if (_PrimeList[i]>size)
+						return _PrimeList[i];
+				}
+		
+				return _PrimeList[_PrimeSize-1];
+			}
+		
+		private:
+			vector<Node*> _tables;    //_tables.size() 是哈希表的容量 
+			size_t _size;             //哈希表中元素的个数
+		}; 
+
 		
 		
 ```
@@ -98,7 +347,21 @@
 
 ### 性能分析与应用：
 
-	
+	查找过程中，关键码的比较次数，取决于产生冲突的多少，产生的冲突少，查找效率就高，产生的冲突多，查找效率就低。因此，影响产生冲突多少的因素，也就是影响查找效率的因素。影响产生冲突多少有以下三个因素：
+		
+	1. 散列函数是否均匀；
+	2. 处理冲突的方法；
+	3. 散列表的装填因子。
+
+
+	应用：
+		
+		1.信息安全：文件校验 <http://baike.baidu.com/view/5094912.htm> 
+					数字签名 <http://baike.baidu.com/view/7626.htm>
+					认证模式：MD5、SHA1的破解
+		
+		2.布隆过滤器： <https://segmentfault.com/a/1190000002729689>
+					   <http://www.cnblogs.com/haippy/archive/2012/07/13/2590351.html>
 	
 	
 	

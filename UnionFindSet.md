@@ -121,7 +121,32 @@
 <br>
 
 
+### 并查集的例题：
 
+![image](http://hbimg.b0.upaiyun.com/33a67c3b344f67f10bd420fb308803c4069f65c5cc48-BKt2B6_fw658)
+
+<br>
+<br>
+
+	注意这道题印刷可能有误，接受二维数组必须指定列数或者传递一维数组。
+	然后利用上面写好的类--UnionFindSet 很容易解决此题：
+	
+```cpp
+
+		int friends(int n, int m, int r[][2])
+		{
+			UnionFindSet f(n);
+		
+			for (int i = 0; i < m; ++i)
+			{
+				f.Merge(r[i][0], r[i][1]);
+			}
+		
+			return f.GetDifferentCircleNum();
+		}
+		
+		
+```
 
 
 
